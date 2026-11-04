@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<title>FOOTBALL PRO</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d2e;--panel2:#1a2940;--line:#293a52;--txt:#eef4ff;--muted:#91a4bd;--green:#31d69a;--gold:#f3c969;--red:#ff7c83}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b1220,#101b2b 60%,#0b1220);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 14px calc(86px + env(safe-area-inset-bottom));}
+header{padding:18px 4px 14px;display:flex;justify-content:space-between;align-items:center}h1{font-size:21px;letter-spacing:1.5px;margin:0;font-weight:850}h1 span{color:var(--green)}.sub{font-size:10px;color:var(--muted);letter-spacing:1.8px;margin-top:4px}.live{font-size:11px;color:var(--green);border:1px solid #23634f;border-radius:20px;padding:7px 10px;background:#12352d}
+.hero{background:linear-gradient(135deg,#1b3450,#15243a);border:1px solid #304963;border-radius:19px;padding:17px;margin-bottom:15px}.hero small{color:#a9bdd3;letter-spacing:1px}.hero h2{font-size:20px;margin:8px 0}.hero p{font-size:12px;color:#a9bdd3;margin:0;line-height:1.5}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}.stat b{display:block;font-size:21px}.stat span{font-size:10px;color:var(--muted)}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:19px 2px 10px;font-size:14px;font-weight:750}.muted{color:var(--muted);font-size:11px;font-weight:500}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:11px}.match-head{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-bottom:12px}.teams{display:flex;align-items:center;justify-content:space-between;font-weight:750}.teams .vs{font-size:11px;color:var(--muted);font-weight:500}.empty{text-align:center;padding:26px 12px;color:var(--muted);font-size:13px}
+button{border:0;border-radius:11px;padding:12px 14px;font-weight:750;font-size:13px;cursor:pointer}.primary{background:var(--green);color:#062319}.secondary{background:var(--panel2);color:var(--txt);border:1px solid var(--line)}.danger{background:#49252c;color:#ffdce0}.full{width:100%}
+input,select{width:100%;background:#0c1727;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:12px;font-size:14px;outline:none}label{display:block;color:var(--muted);font-size:11px;margin:11px 0 6px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.form-grid .wide{grid-column:1/-1}
+.market{background:#0d1828;border:1px solid var(--line);border-radius:12px;padding:11px;margin-top:9px}.market-title{font-size:12px;font-weight:750;margin-bottom:8px}.odds{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.odds.two{grid-template-columns:repeat(2,1fr)}.odds label{margin:0;font-size:10px}.odds input{margin-top:5px;padding:10px;text-align:center;font-weight:700}
+.result{background:#112d2a;border:1px solid #23634f;border-radius:12px;padding:12px;margin-top:12px}.result b{color:var(--green)}.result p{font-size:12px;color:#b9d6ce;line-height:1.5;margin:6px 0 0}
+.tabs{position:fixed;bottom:0;left:0;right:0;padding:9px 8px calc(9px + env(safe-area-inset-bottom));background:#0b1220ee;backdrop-filter:blur(15px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);z-index:5}.tab{background:transparent;color:var(--muted);font-size:10px;padding:8px 2px}.tab.active{color:var(--green)}.tab span{display:block;font-size:18px;margin-bottom:4px}
+.page{display:none}.page.active{display:block}.saved-row{display:flex;justify-content:space-between;gap:10px;align-items:center}.saved-row strong{font-size:13px}.saved-row small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.note{font-size:10px;color:var(--muted);line-height:1.5;margin:12px 2px}
+</style>
+</head>
+<body>
+<header><div><h1>FOOTBALL <span>PRO</span></h1><div class="sub">MATCH ANALYSIS CENTER</div></div><div class="live">● ANALİZ MODU</div></header>
+
+<main>
+<section id="home" class="page active">
+ <div class="hero"><small>FUTBOL ANALİZ MERKEZİ</small><h2>Veriye dayalı maç analizi.</h2><p>Maçlarını ekle, oranlarını gir, olasılıkları incele ve tahmin geçmişini takip et.</p></div>
+ <div class="stats"><div class="stat"><b id="matchCount">0</b><span>KAYITLI MAÇ</span></div><div class="stat"><b id="savedCount">0</b><span>TAHMİN</span></div><div class="stat"><b>—</b><span>API DURUMU</span></div></div>
+ <div class="section-title">Maçların <span class="muted">Manuel kayıtlar</span></div>
+ <div id="homeMatches"></div>
+ <button class="primary full" onclick="showPage('add')">＋ Yeni maç ve oran ekle</button>
+ <p class="note">Bu ilk sürüm manuel çalışır. Canlı futbol verileri henüz bağlı değildir.</p>
+</section>
+
+<section id="add" class="page">
+ <div class="section-title">Yeni maç ekle</div>
+ <div class="card">
+  <div class="form-grid">
+   <div><label>Ev sahibi</label><input id="homeTeam" placeholder="Örn. Galatasaray"></div>
+   <div><label>Deplasman</label><input id="awayTeam" placeholder="Örn. Fenerbahçe"></div>
+   <div><label>Lig</label><input id="league" placeholder="Örn. Süper Lig"></div>
+   <div><label>Maç tarihi</label><input id="matchDate" type="date"></div>
+  </div>
+  <div class="section-title">İddaa oranları <span class="muted">Sen gir</span></div>
+  <div class="market"><div class="market-title">Maç sonucu</div><div class="odds"><label>MS 1<input id="ms1" type="number" step="0.01" min="1" placeholder="1.80"></label><label>MS X<input id="msx" type="number" step="0.01" min="1" placeholder="3.20"></label><label>MS 2<input id="ms2" type="number" step="0.01" min="1" placeholder="4.00"></label></div></div>
+  <div class="market"><div class="market-title">2,5 Gol Alt / Üst</div><div class="odds two"><label>Alt 2,5<input id="u25" type="number" step="0.01" min="1" placeholder="1.80"></label><label>Üst 2,5<input id="o25" type="number" step="0.01" min="1" placeholder="1.90"></label></div></div>
+  <div class="market"><div class="market-title">Karşılıklı gol</div><div class="odds two"><label>KG Var<input id="kgv" type="number" step="0.01" min="1" placeholder="1.70"></label><label>KG Yok<input id="kgy" type="number" step="0.01" min="1" placeholder="2.00"></label></div></div>
+  <div class="market"><div class="market-title">İlk yarı sonucu</div><div class="odds"><label>İY 1<input id="iy1" type="number" step="0.01" min="1" placeholder="2.30"></label><label>İY X<input id="iyx" type="number" step="0.01" min="1" placeholder="2.00"></label><label>İY 2<input id="iy2" type="number" step="0.01" min="1" placeholder="4.50"></label></div></div>
+  <div class="market"><div class="market-title">İlk yarı 0,5 gol Alt / Üst</div><div class="odds two"><label>Alt 0,5<input id="iy05a" type="number" step="0.01" min="1" placeholder="2.50"></label><label>Üst 0,5<input id="iy05u" type="number" step="0.01" min="1" placeholder="1.40"></label></div></div>
+  <div class="market"><div class="market-title">Çifte şans</div><div class="odds"><label>1X<input id="dc1x" type="number" step="0.01" min="1" placeholder="1.20"></label><label>12<input id="dc12" type="number" step="0.01" min="1" placeholder="1.25"></label><label>X2<input id="dcx2" type="number" step="0.01" min="1" placeholder="1.80"></label></div></div>
+  <button class="primary full" style="margin-top:14px" onclick="saveMatch()">Maçı kaydet</button>
+ </div>
+ <p class="note">Oran alanlarını boş bırakabilirsin. Girilen her oran için yaklaşık ham olasılık 1 / oran olarak hesaplanır. Bahis şirketi marjı nedeniyle bu değer kesin gerçek olasılık değildir.</p>
+</section>
+
+<section id="analysis" class="page">
+ <div class="section-title">Oran analiz merkezi</div>
+ <div id="analysisContent" class="card"><div class="empty">Analiz etmek için önce bir maç ekle.</div></div>
+</section>
+
+<section id="history" class="page">
+ <div class="section-title">Kayıtlı maçlar <span class="muted">Bu cihazda saklanır</span></div>
+ <div id="historyContent"></div>
+ <button class="secondary full" onclick="exportData()">Verileri dışa aktar</button>
+ <p class="note">Kayıtlar bu tarayıcının yerel hafızasında tutulur. Tarayıcı verilerini silersen kayıtlar kaybolabilir. Düzenli yedek al.</p>
+</section>
+</main>
+
+<nav class="tabs">
+ <button class="tab active" data-page="home" onclick="showPage('home')"><span>⌂</span>Ana sayfa</button>
+ <button class="tab" data-page="add" onclick="showPage('add')"><span>＋</span>Oran gir</button>
+ <button class="tab" data-page="analysis" onclick="showPage('analysis')"><span>◈</span>Analiz</button>
+ <button class="tab" data-page="history" onclick="showPage('history')"><span>▤</span>Kayıtlar</button>
+</nav>
+<script>
+const KEY='footballPro_v1';
+let matches=JSON.parse(localStorage.getItem(KEY)||'[]');
+const fields=['ms1','msx','ms2','u25','o25','kgv','kgy','iy1','iyx','iy2','iy05a','iy05u','dc1x','dc12','dcx2'];
+const labels={ms1:'MS 1',msx:'MS X',ms2:'MS 2',u25:'Alt 2,5',o25:'Üst 2,5',kgv:'KG Var',kgy:'KG Yok',iy1:'İY 1',iyx:'İY X',iy2:'İY 2',iy05a:'İY Alt 0,5',iy05u:'İY Üst 0,5',dc1x:'1X',dc12:'12',dcx2:'X2'};
+function persist(){localStorage.setItem(KEY,JSON.stringify(matches));render();}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.page===id));if(id==='analysis')renderAnalysis();}
+function saveMatch(){
+ const h=document.getElementById('homeTeam').value.trim(),a=document.getElementById('awayTeam').value.trim();
+ if(!h||!a){alert('Lütfen ev sahibi ve deplasman takımını gir.');return;}
+ const odds={};fields.forEach(k=>{const v=parseFloat(document.getElementById(k).value);if(Number.isFinite(v)&&v>1)odds[k]=v;});
+ matches.unshift({id:Date.now(),home:h,away:a,league:document.getElementById('league').value.trim(),date:document.getElementById('matchDate').value,odds});
+ persist();document.getElementById('homeTeam').value='';document.getElementById('awayTeam').value='';document.getElementById('league').value='';fields.forEach(k=>document.getElementById(k).value='');showPage('home');alert('Maç kaydedildi.');
+}
+function pct(odd){return odd>1?(100/odd).toFixed(1)+'%':'—';}
+function normalized(keys,odds){const vals=keys.map(k=>odds[k]).filter(v=>v>1);if(vals.length!==keys.length)return null;const sum=vals.reduce((s,v)=>s+1/v,0);return keys.map(k=>({label:labels[k],p:(100/odds[k])/sum}));}
+function render(){
+ document.getElementById('matchCount').textContent=matches.length;document.getElementById('savedCount').textContent=matches.filter(m=>Object.keys(m.odds).length).length;
+ const cards=matches.slice(0,5).map(m=>`<div class="card"><div class="match-head"><span>${esc(m.league||'Lig belirtilmedi')}</span><span>${esc(m.date||'Tarih belirtilmedi')}</span></div><div class="teams"><span>${esc(m.home)}</span><span class="vs">VS</span><span>${esc(m.away)}</span></div><div style="display:flex;gap:7px;margin-top:13px"><button class="secondary" style="flex:1" onclick="openAnalysis(${m.id})">Oran analizi</button><button class="danger" onclick="deleteMatch(${m.id})">Sil</button></div></div>`).join('');
+ document.getElementById('homeMatches').innerHTML=cards||'<div class="card empty">Henüz maç eklemedin.</div>';
+ document.getElementById('historyContent').innerHTML=matches.map(m=>`<div class="card saved-row"><div><strong>${esc(m.home)} – ${esc(m.away)}</strong><small>${esc(m.league||'Lig yok')} · ${esc(m.date||'Tarih yok')} · ${Object.keys(m.odds).length} oran</small></div><button class="secondary" onclick="openAnalysis(${m.id})">İncele</button></div>`).join('')||'<div class="card empty">Kayıt bulunmuyor.</div>';
+}
+function openAnalysis(id){showPage('analysis');renderAnalysis(id);}
+function renderAnalysis(id){
+ const m=matches.find(x=>x.id===id)||matches[0],el=document.getElementById('analysisContent');
+ if(!m){el.innerHTML='<div class="empty">Analiz için önce bir maç ekle.</div>';return;}
+ let html=`<div class="match-head"><span>${esc(m.league||'Lig belirtilmedi')}</span><span>${esc(m.date||'')}</span></div><h2 style="font-size:19px;margin:5px 0 15px">${esc(m.home)} – ${esc(m.away)}</h2>`;
+ const groups=[['Maç sonucu',['ms1','msx','ms2']],['2,5 Alt / Üst',['u25','o25']],['Karşılıklı gol',['kgv','kgy']],['İlk yarı sonucu',['iy1','iyx','iy2']],['İlk yarı 0,5 Alt / Üst',['iy05a','iy05u']],['Çifte şans',['dc1x','dc12','dcx2']]];
+ groups.forEach(([title,keys])=>{const present=keys.filter(k=>m.odds[k]);if(!present.length)return;html+=`<div class="market"><div class="market-title">${title}</div>`;const norm=normalized(keys,m.odds);present.forEach(k=>{html+=`<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:12px"><span>${labels[k]}</span><span><b>${m.odds[k].toFixed(2)}</b> <span style="color:var(--muted)">· Ham olasılık ${pct(m.odds[k])}</span></span></div>`;});if(norm){const margin=(keys.reduce((s,k)=>s+1/m.odds[k],0)-1)*100;html+=`<div class="result"><b>Marjsızlaştırılmış yaklaşık dağılım</b><p>${norm.map(x=>x.label+': '+x.p.toFixed(1)+'%').join(' · ')}<br>Oran toplamından hesaplanan teorik marj: ${margin.toFixed(1)}%</p></div>`;}html+='</div>';});
+ if(!Object.keys(m.odds).length)html+='<div class="empty">Bu maç için oran girilmemiş.</div>';
+ html+='<p class="note">Olasılıklar yalnızca girilen oranlardan türetilen piyasa göstergeleridir; takım performansına dayalı tahmin değildir ve kazanç garantisi vermez.</p>';
+ el.innerHTML=html;
+}
+function deleteMatch(id){if(confirm('Bu maçı silmek istiyor musun?')){matches=matches.filter(m=>m.id!==id);persist();}}
+function exportData(){const blob=new Blob([JSON.stringify(matches,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='football-pro-yedek.json';a.click();URL.revokeObjectURL(url);}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+render();
+</script>
+</body>
+</html>
